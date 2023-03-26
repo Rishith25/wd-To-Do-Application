@@ -36,15 +36,11 @@ const todoList = () => {
   const dueLater = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
-    const today = new Date();
-    let dueLaterItems = [];
-    for (let i = 0; i < all.length; i++) {
-      const dueDate = new Date(all[i].dueDate);
-      if (dueDate > today) {
-        dueLaterItems.push(all[i]);
-      }
-    }
-    return dueLaterItems;
+    return all.filter(
+      (item) =>
+        new Date(item.dueDate).toISOString().split("T")[0] >
+        new Date().toISOString().split("T")[0]
+    );
   };
 
   const toDisplayableList = (list) => {
