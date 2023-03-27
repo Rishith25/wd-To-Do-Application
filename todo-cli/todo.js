@@ -18,8 +18,8 @@ const todoList = () => {
     // console.log(new Date().toISOString().split('T')[0])
     return all.filter(
       (item) =>
-        new Date(item.dueDate).toISOString().split("T")[0] <
-        new Date().toISOString().split("T")[0]
+        new Date(item.dueDate).toISOString().slice(0, 10) <
+        new Date().toISOString().slice(0, 10)
     );
   };
 
@@ -28,8 +28,8 @@ const todoList = () => {
     // of todo items that are due today accordingly.
     return all.filter(
       (item) =>
-        new Date(item.dueDate).toISOString().split("T")[0] ===
-        new Date().toISOString().split("T")[0]
+        new Date(item.dueDate).toISOString().slice(0, 10) ===
+        new Date().toISOString().slice(0, 10)
     );
   };
 
@@ -38,41 +38,24 @@ const todoList = () => {
     // of todo items that are due later accordingly.
     return all.filter(
       (item) =>
-        new Date(item.dueDate).toISOString().split("T")[0] >
-        new Date().toISOString().split("T")[0]
+        new Date(item.dueDate).toISOString().slice(0, 10) >
+        new Date().toISOString().slice(0, 10)
     );
   };
 
   const toDisplayableList = (list) => {
     // Format the To-Do list here, and return the output string
     // as per the format given above.
-    let output = "";
-    const today = new Date();
-    for (let i = 0; i < list.length; i++) {
-      const item = list[i];
-      const dueDate = new Date(item.dueDate);
-      if (
-        dueDate.toISOString().split("T")[0] ===
-        today.toISOString().split("T")[0]
-      ) {
-        if (item == list[list.length - 1]) {
-          output = output + `[${item.completed ? "x" : " "}] ${item.title}`;
-        } else {
-          output = output + `[${item.completed ? "x" : " "}] ${item.title}\n`;
-        }
-      } else {
-        if (item == list[list.length - 1]) {
-          output =
-            output +
-            `[${item.completed ? "x" : " "}] ${item.title} ${item.dueDate}`;
-        } else {
-          output =
-            output +
-            `[${item.completed ? "x" : " "}] ${item.title} ${item.dueDate}\n`;
-        }
-      }
-    }
-    return output;
+    return list
+      .map((item) => {
+        const completionStatus = item.completed ? "[x]" : "";
+        const displayedDate =
+          item.dueDate === new Date().toISOString().slice(0, 10)
+            ? ""
+            : item.dueDate;
+        return `${completionStatus} ${item.title} ${displayedDate}`;
+      })
+      .join("\n");
   };
 
   return {
