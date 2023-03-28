@@ -48,12 +48,13 @@ const todoList = () => {
     // as per the format given above.
     return list
       .map((item) => {
-        const completionStatus = item.completed ? "[x]" : "";
+        const completionStatus = item.completed ? "[x]" : "[ ]";
         const displayedDate =
           item.dueDate === new Date().toISOString().slice(0, 10)
             ? ""
-            : item.dueDate;
-        return `${completionStatus} ${item.title} ${displayedDate}`;
+            : item.dueDate.trim();
+        const title = item.title.trim();
+        return `${completionStatus} ${title} ${displayedDate}`;
       })
       .join("\n");
   };

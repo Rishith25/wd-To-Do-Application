@@ -2,15 +2,7 @@
 /* eslint-disable no-unused-vars */
 const todoList = require("../todo");
 const today = new Date();
-const {
-  all,
-  markAsComplete,
-  add,
-  overdue,
-  dueToday,
-  dueLater,
-  toDisplayableList,
-} = todoList();
+const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
 // eslint-disable-next-line no-undef
 describe("Todolist Test Suite", () => {
@@ -46,7 +38,7 @@ describe("Todolist Test Suite", () => {
     const overdueItems = all.filter(
       (item) =>
         new Date(item.dueDate).toISOString().slice(0, 10) <
-        new Date().toISOString().slice(0, 10)
+        today.toISOString().slice(0, 10)
     );
     expect(overdue()).toEqual(overdueItems);
   });
@@ -55,7 +47,7 @@ describe("Todolist Test Suite", () => {
     const dueTodayItems = all.filter(
       (item) =>
         new Date(item.dueDate).toISOString().slice(0, 10) ===
-        new Date().toISOString().slice(0, 10)
+        today.toISOString().slice(0, 10)
     );
     expect(dueToday()).toEqual(dueTodayItems);
   });
@@ -64,7 +56,7 @@ describe("Todolist Test Suite", () => {
     const dueLaterItems = all.filter(
       (item) =>
         new Date(item.dueDate).toISOString().slice(0, 10) >
-        new Date().toISOString().slice(0, 10)
+        today.toISOString().slice(0, 10)
     );
     expect(dueLater()).toEqual(dueLaterItems);
   });
