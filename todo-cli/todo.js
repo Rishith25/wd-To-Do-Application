@@ -14,12 +14,8 @@ const todoList = () => {
     // of overdue items accordingly.
     const today = new Date();
     let overdueItems = [];
-    // console.log(new Date().toLocaleDateString("en-CA"));
-    // console.log(new Date().toISOString().split('T')[0])
     return all.filter(
-      (item) =>
-        new Date(item.dueDate).toISOString().slice(0, 10) <
-        new Date().toISOString().slice(0, 10)
+      (item) => item.dueDate < new Date().toISOString().slice(0, 10)
     );
   };
 
@@ -27,9 +23,7 @@ const todoList = () => {
     // Write the date check condition here and return the array
     // of todo items that are due today accordingly.
     return all.filter(
-      (item) =>
-        new Date(item.dueDate).toISOString().slice(0, 10) ===
-        new Date().toISOString().slice(0, 10)
+      (item) => item.dueDate === new Date().toISOString().slice(0, 10)
     );
   };
 
@@ -37,9 +31,7 @@ const todoList = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
     return all.filter(
-      (item) =>
-        new Date(item.dueDate).toISOString().slice(0, 10) >
-        new Date().toISOString().slice(0, 10)
+      (item) => item.dueDate > new Date().toISOString().slice(0, 10)
     );
   };
 
@@ -52,9 +44,8 @@ const todoList = () => {
         const displayedDate =
           item.dueDate === new Date().toISOString().slice(0, 10)
             ? ""
-            : item.dueDate.trim();
-        const title = item.title.trim();
-        return `${completionStatus} ${title} ${displayedDate}`;
+            : item.dueDate;
+        return `${completionStatus} ${item.title.trim()} ${displayedDate.trim()}`;
       })
       .join("\n");
   };
