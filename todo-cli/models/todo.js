@@ -44,19 +44,25 @@ module.exports = (sequelize, DataTypes) => {
       console.log("Overdue");
       // FILL IN HERE
       const overdueitems = await this.overdue();
-      console.log(overdueitems);
+      overdueitems.forEach((item) => {
+        console.log(item.displayableString());
+      });
       console.log("\n");
 
       console.log("Due Today");
       // FILL IN HERE
       const duetodayitems = await this.dueToday();
-      console.log(duetodayitems);
+      duetodayitems.forEach((item) => {
+        console.log(item.displayableString());
+      });
       console.log("\n");
 
       console.log("Due Later");
       // FILL IN HERE
       const duelateritems = await this.dueLater();
-      console.log(duelateritems);
+      duelateritems.forEach((item) => {
+        console.log(item.displayableString());
+      });
       console.log("\n");
     }
 
@@ -65,13 +71,9 @@ module.exports = (sequelize, DataTypes) => {
       const overDueItems = await this.findAll({
         where: {
           dueDate: { [Op.lt]: today },
-          // completed: false
         },
       });
-      const overdueList = overDueItems
-        .map((todo) => todo.displayableString())
-        .join("\n");
-      return overdueList;
+      return overDueItems;
     }
 
     static async dueToday() {
@@ -81,10 +83,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: today,
         },
       });
-      const duetodayList = DueTodayItems.map((todo) =>
-        todo.displayableString()
-      ).join("\n");
-      return duetodayList;
+      return DueTodayItems;
     }
 
     static async dueLater() {
@@ -92,13 +91,10 @@ module.exports = (sequelize, DataTypes) => {
       const DueLaterItems = await this.findAll({
         where: {
           dueDate: { [Op.gt]: today },
-          completed: false,
+          // completed: false,
         },
       });
-      const duelaterList = DueLaterItems.map((todo) =>
-        todo.displayableString()
-      ).join("\n");
-      return duelaterList;
+      return DueLaterItems;
     }
 
     static async markAsComplete(id) {
