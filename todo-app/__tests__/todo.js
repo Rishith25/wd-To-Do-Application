@@ -4,6 +4,7 @@ const request = require("supertest");
 
 const db = require("../models/index");
 const app = require("../app");
+const todo = require("../models/todo");
 
 let server, agent;
 
@@ -47,4 +48,37 @@ describe("Todo test suite", () => {
         const parsedUpdateRespose = JSON.parse(markCompleteRespose.text);
         expect(parsedUpdateRespose.completed).toBe(true);
     });
+    
+    test("Fetches all todos in the database using /todos endpoint", async () => {
+        await agent.post("/todos").send({
+          title: "Buy xbox",
+          dueDate: new Date().toISOString(),
+          completed: false,
+        });
+        await agent.post("/todos").send({
+          title: "Buy ps3",
+          dueDate: new Date().toISOString(),
+          completed: false,
+        });
+        const response = await agent.get("/todos");
+        const parsedResponse = JSON.parse(response.text);
+        expect(parsedResponse.length).toBe(4);
+        expect(parsedResponse[3]["title"]).toBe("Buy ps3");
+    },10000);
+    
+    test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+        // FILL IN YOUR CODE HERE
+        const todo = await agent.post("/todos").send({
+            title: "Test todo",
+            dueDate: new Date().toISOString(),
+            completed: false
+        });
+        const parsedResponse = JSON.parse(todo.text);
+        const todoID = parsedResponse.id;
+        const DeleteTodo = await agent.delete(`/todos/${todoID}`).send();
+
+        const response = await agent.get(`/todos/${todoID}`);
+        const DeletedResponse = JSON.parse(response.text);
+        expect(DeletedResponse).toBeNull();
+    },10000);
 })
