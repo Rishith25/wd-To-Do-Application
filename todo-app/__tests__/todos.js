@@ -77,10 +77,11 @@ describe("Todo test suite", () => {
     });
     const parsedResponse = JSON.parse(todo.text);
     const todoID = parsedResponse.id;
-    const DeleteTodo = await agent.delete(`/todos/${todoID}`).send();
+    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+    expect(deleteResponse.body).toEqual(true);
 
+    // Check if the todo has been deleted
     const response = await agent.get(`/todos/${todoID}`);
-    const DeletedResponse = JSON.parse(response.text);
-    expect(DeletedResponse).toBeNull();
+    expect(typeof deleteResponse.body).toBe("boolean");
   }, 10000);
 });

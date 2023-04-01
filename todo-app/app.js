@@ -14,8 +14,7 @@ app.get("/todos", async function (_request, response) {
   // FILL IN YOUR CODE HERE
   try {
     const todo = await Todo.findAll();
-    return response.json(todo)
-    
+    return response.json(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -61,8 +60,11 @@ app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
   // FILL IN YOUR CODE HERE
   try {
+    if (!todo) {
+      return response.status(404).json({ error: "Todo not found" });
+    }
     const deletedTodo = await todo.deleteTodo(request.params.id);
-    return response.json(deletedTodo)
+    return response.json(true);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -73,7 +75,6 @@ app.delete("/todos/:id", async function (request, response) {
 });
 
 module.exports = app;
-
 
 // /* eslint-disable no-unused-vars */
 // const { request, response } = require("express")
@@ -86,7 +87,6 @@ module.exports = app;
 // // app.METHOD(PATH, HANDLER)
 // // or
 // // app.METHOD(path, callback [, callback ...])
-
 
 // app.get("/todos", (request, response) => {
 //     console.log("Todo List");
@@ -123,5 +123,3 @@ module.exports = app;
 // })
 
 // module.exports = app;
-
-
