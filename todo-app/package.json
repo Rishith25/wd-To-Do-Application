@@ -1,7 +1,6 @@
 {
   "name": "todo-app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "db:create:test": "NODE_ENV=test npx sequelize-cli db:create",
@@ -30,5 +29,6 @@
     "prettier": "^2.8.7",
     "sequelize-cli": "^6.6.0",
     "supertest": "^6.3.3"
-  }
+  },
+  "description": ""
 }
