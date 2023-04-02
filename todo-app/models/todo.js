@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 "use strict";
 const { Model } = require("sequelize");
@@ -16,6 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
+    static async getTodos() {
+      return this.findAll();
+    }
+
+    static async overdue() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date(),
+          },
+          completed: false,
+        },
+      });
+    }
     markAsCompleted() {
       return this.update({ completed: true });
     }
