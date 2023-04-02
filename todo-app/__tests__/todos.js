@@ -77,11 +77,17 @@ describe("Todo test suite", () => {
     });
     const parsedResponse = JSON.parse(todo.text);
     const todoID = parsedResponse.id;
-    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
-    expect(deleteResponse.body).toEqual(true);
 
-    // Check if the todo has been deleted
-    const response = await agent.get(`/todos/${todoID}`);
-    expect(typeof deleteResponse.body).toBe("boolean");
+    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+    const parsedDeletedResponse = JSON.parse(deleteResponse.text);
+    expect(parsedDeletedResponse).toBe(true);
+
+    const deleteNonExistentTodoResponse = await agent
+      .delete(`/todos/9999`)
+      .send();
+    const parsedDeleteNonExistentTodoResponse = JSON.parse(
+      deleteNonExistentTodoResponse.text
+    );
+    expect(parsedDeleteNonExistentTodoResponse).toBe(false);
   }, 10000);
 });
