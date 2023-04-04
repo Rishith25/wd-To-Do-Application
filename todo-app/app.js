@@ -11,21 +11,42 @@ app.set("view engine", "ejs");
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "public")));
 
-const todos = [
-  { id: 1, title: "Buy groceries" },
-  { id: 2, title: "Do laundry" },
-  { id: 3, title: "Clean room" },
-];
+app.get("/", async function (request, response) {
+  try {
+    const allTodos = await Todo.getTodoList();
+    const overdue = await Todo.overdue();
+    const dueToday = await Todo.dueToday();
+    const dueLater = await Todo.dueLater();
+    if (request.accepts("html")) {
+      response.render("index", {
+        allTodos,
+        overdue,
+        dueToday,
+        dueLater,
+      });
+    } else {
+      response.json({
+        allTodos,
+        overdue,
+        dueToday,
+        dueLater,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
 
 app.get("/", async function (request, response) {
-  const allTodos = await Todo.getTodos();
+  const allTodos = await Todo.getTodoList();
   if (request.accepts("html")) {
     response.render("index", {
-      todos,
+      allTodos,
     });
   } else {
     response.json({
-      todos,
+      allTodos,
     });
   }
 });
@@ -56,8 +77,13 @@ app.get("/todos/:id", async function (request, response) {
 });
 
 app.post("/todos", async function (request, response) {
+  console.log("Creating a todo", request.body);
   try {
-    const todo = await Todo.addTodo(request.body);
+    const todo = await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+    });
+    // response.redirect("/");
     return response.json(todo);
   } catch (error) {
     console.log(error);
