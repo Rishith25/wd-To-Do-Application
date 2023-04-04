@@ -1,8 +1,9 @@
 <div>
-  <h5 title="Overdue" id="Overdue" class="font-semibold">Overdue </h5>
-  <ul class="list-none" (<span id="count-overdue">
+  <h5 title="Overdue" id="Overdue" class="font-semibold">Overdue</h5>
+  <span id="count-overdue">
     <%= overdue.length %>
   </span>
+  <ul class="list-none" >
     <li class="Todo-Item">
       <table>
         <% for( var i=0; i < overdue.length; i++) { %>
@@ -30,10 +31,11 @@
       </table>
     </li>
   </ul>
-  <h5 title="Due Today" id="Due Today" class="font-semibold">Due Today </h5>
-  <ul <span id="count-due-today">
+  <h5 title="Due Today" id="Due Today" class="font-semibold">Due Today</h5>
+  <span id="count-due-today">
     <%= dueToday.length %>
   </span>
+  <ul class="list-none">
     <li class="Todo-Item">
       <table>
         <% for( var i=0; i < dueToday.length; i++) { %>
@@ -60,10 +62,11 @@
       </table>
     </li>
   </ul>
-  <h5 title="Due Later" id="Due Later" class="font-semibold">Due Later </h5>
-  <ul <span id="count-due-later">
+  <h5 title="Due Later" id="Due Later" class="font-semibold">Due Later</h5>
+  <span id="count-due-later">
     <%= dueLater.length %>
   </span>
+  <ul class="list-none">
     <li class="Todo-Item">
       <table>
         <% for( var i=0; i < dueLater.length; i++) { %>
