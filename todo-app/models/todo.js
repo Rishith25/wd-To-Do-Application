@@ -96,12 +96,37 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
-    markAsCompleted() {
-      return this.update({ completed: true });
+    // markAsCompleted() {
+    //   return this.update({ completed: true });
+    // }
+    // static async deleteTodo(id) {
+    //   return this.destroy({
+    //     where: {
+    //       id
+    //     }
+    //   });
+    // }
+
+    setCompletionStatus(completed) {
+      return this.update({ completed: !completed });
     }
-    deleteTodo() {
-      return this.destroy();
+
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
     }
+
+    static completedItems() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+      });
+    }
+
     static getTodoList() {
       return this.findAll();
     }
@@ -112,6 +137,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.lt]: new Date(),
           },
+          completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -124,6 +150,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date(),
           },
+          completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -136,6 +163,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.gt]: new Date(),
           },
+          completed: false,
         },
         order: [["id", "ASC"]],
       });
