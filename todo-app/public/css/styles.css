@@ -4,11 +4,10 @@ body {
   font-family: "Courier New", Courier, monospace;
 }
 
-.trash-icon {
+/* .trash-icon {
   visibility: hidden;
-}
+} */
 
 .Todo-Item:hover .trash-icon {
   display: block;
-  visibility: visible;
 }

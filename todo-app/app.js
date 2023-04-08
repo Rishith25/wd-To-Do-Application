@@ -19,27 +19,27 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async function (request, response) {
   try {
-    const allTodos = await Todo.getTodoList();
     const overdue = await Todo.overdue();
     const dueToday = await Todo.dueToday();
     const dueLater = await Todo.dueLater();
     const completedList = await Todo.completedItems();
+    const allTodos = await Todo.getTodoList();
     if (request.accepts("html")) {
       response.render("index", {
-        allTodos,
         overdue,
         dueToday,
         dueLater,
         completedList,
+        allTodos,
         csrfToken: request.csrfToken(),
       });
     } else {
       response.json({
-        allTodos,
         overdue,
         dueToday,
         dueLater,
         completedList,
+        allTodos,
       });
     }
   } catch (error) {
@@ -89,11 +89,7 @@ app.get("/todos/:id", async function (request, response) {
 app.post("/todos", async function (request, response) {
   console.log("Creating a todo", request.body);
   try {
-    const todo = await Todo.addTodo({
-      title: request.body.title,
-      dueDate: request.body.dueDate,
-      completed: false,
-    });
+    const todo = await Todo.addTodo(request.body);
     return response.redirect("/");
     // return response.json(todo);
   } catch (error) {
