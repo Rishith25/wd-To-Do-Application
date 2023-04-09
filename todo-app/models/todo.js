@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     setCompletionStatus(completed) {
-      return this.update({ completed: !completed });
+      const setComplete = completed === true ? false : true;
+      return this.update({ completed: setComplete });
     }
 
     static async remove(id) {
