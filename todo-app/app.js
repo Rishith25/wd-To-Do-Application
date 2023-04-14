@@ -91,13 +91,13 @@ passport.deserializeUser((id, done) => {
 
 app.get("/", async function (request, response) {
   try {
-    if (request.accepts("html")) {
+    if (request.user) {
+      return response.redirect("/todos");
+    } else {
       response.render("index", {
         title: "Todo application",
         csrfToken: request.csrfToken(),
       });
-    } else {
-      response.json({});
     }
   } catch (error) {
     console.log(error);
@@ -118,12 +118,13 @@ app.get(
       const allTodos = await Todo.getTodoList();
       if (request.accepts("html")) {
         response.render("todos", {
+          loggedInUser: request.user,
           title: "Todo application",
+          allTodos,
           overdue,
           dueToday,
           dueLater,
           completedList,
-          allTodos,
           csrfToken: request.csrfToken(),
         });
       } else {
@@ -143,6 +144,9 @@ app.get(
 );
 
 app.get("/signup", (request, response) => {
+  if (request.isAuthenticated()) {
+    return response.redirect("/todos");
+  }
   response.render("signup", {
     title: "Signup",
     csrfToken: request.csrfToken(),
@@ -150,9 +154,69 @@ app.get("/signup", (request, response) => {
 });
 
 app.post("/users", async (request, response) => {
+  if (
+    request.body.firstName.length == 0 &&
+    request.body.email.length == 0 &&
+    request.body.password.length == 0
+  ) {
+    request.flash("error", "First Name can not be Empty");
+    request.flash("error", "Email can not be Empty");
+    request.flash("error", "Password can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length == 0 &&
+    request.body.email.length == 0 &&
+    request.body.password.length != 0
+  ) {
+    request.flash("error", "Email can not be Empty");
+    request.flash("error", "First Name can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length == 0 &&
+    request.body.email.length != 0 &&
+    request.body.password.length == 0
+  ) {
+    request.flash("error", "First Name can not be Empty");
+    request.flash("error", "Password can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length == 0 &&
+    request.body.email.length != 0 &&
+    request.body.password.length != 0
+  ) {
+    request.flash("error", "First Name can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length != 0 &&
+    request.body.email.length == 0 &&
+    request.body.password.length == 0
+  ) {
+    request.flash("error", "Email can not be Empty");
+    request.flash("error", "Password can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length != 0 &&
+    request.body.email.length == 0 &&
+    request.body.password.length != 0
+  ) {
+    request.flash("error", "Email can not be Empty");
+    return response.redirect("/signup");
+  }
+  if (
+    request.body.firstName.length != 0 &&
+    request.body.email.length != 0 &&
+    request.body.password.length == 0
+  ) {
+    request.flash("error", "Password can not be Empty");
+    return response.redirect("/signup");
+  }
   //Hash password using bcrypt
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedPwd);
   //Have to create the user here
   try {
     const user = await User.create({
@@ -164,30 +228,23 @@ app.post("/users", async (request, response) => {
     request.login(user, (err) => {
       if (err) {
         console.log(err);
+      } else {
+        request.flash("success", "Sign Up successful");
       }
       response.redirect("/todos");
     });
   } catch (error) {
-    if (error.name == "SequelizeValidationError") {
-      const errorMsg = error.errors.map((error) => error.message);
-      console.log(errorMsg);
-      errorMsg.forEach((message) => {
-        if (message == "Validation notEmpty on email failed") {
-          request.flash("error", "Email cannot be empty");
-        }
-        if (message == "Validation notEmpty on firstName failed") {
-          request.flash("error", "First Name cannot be empty");
-        }
-      });
-      response.redirect("/signup");
-    } else {
-      console.log(error);
-      return response.status(422).json(error);
-    }
+    console.log(error);
+    request.flash("error", "Account Already exists");
+    response.redirect("/signup");
+    return response.status(422).json(error);
   }
 });
 
 app.get("/login", async (request, response) => {
+  if (request.isAuthenticated()) {
+    return response.redirect("/todos");
+  }
   response.render("login", {
     title: "Login",
     csrfToken: request.csrfToken(),
@@ -208,7 +265,7 @@ app.post(
 
 app.get("/signout", (request, response, next) => {
   //Signout
-  request.logOut((err) => {
+  request.logout((err) => {
     if (err) {
       return next(err);
     }
@@ -216,20 +273,20 @@ app.get("/signout", (request, response, next) => {
   });
 });
 
-app.get("/todos", async function (_request, response) {
-  console.log("Processing list of all Todos ...");
-  // FILL IN YOUR CODE HERE
-  try {
-    const todo = await Todo.findAll();
-    return response.json(todo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
-});
+// app.get("/todos", async function (_request, response) {
+//   console.log("Processing list of all Todos ...");
+//   // FILL IN YOUR CODE HERE
+//   try {
+//     const todo = await Todo.findAll();
+//     return response.json(todo);
+//   } catch (error) {
+//     console.log(error);
+//     return response.status(422).json(error);
+//   }
+//   // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
+//   // Then, we have to respond with all Todos, like:
+//   // response.send(todos)
+// });
 
 app.get("/todos/:id", async function (request, response) {
   try {
@@ -254,6 +311,7 @@ app.post(
       });
       return response.redirect("/todos");
     } catch (error) {
+      console.log(error);
       if (error.name == "SequelizeValidationError") {
         const errorMsg = error.errors.map((error) => error.message);
         console.log(errorMsg);
@@ -284,8 +342,8 @@ app.put(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    const todo = await Todo.findByPk(request.params.id);
     try {
+      const todo = await Todo.findByPk(request.params.id);
       const updatedTodo = await todo.setCompletionStatus(
         request.body.completed
       );

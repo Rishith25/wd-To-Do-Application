@@ -20,7 +20,7 @@
                 method: "put",
                 headers: { "Content-Type": "application/json " },
                 body: JSON.stringify({
-                    completed: complete,
+                    completed: !complete,
                     _csrf: token
                 })
             })
@@ -56,45 +56,52 @@
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include('header') %>
-                <a href="/signout">Signout</a>
-                <form action="/todos" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                    <div class="flex gap-2 py-4">
-                        <div class="flex-auto">
-                            <input type="text" name="title" placeholder="What's next?"
-                                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" />
+                <%= loggedInUser.firstName %>
+                    <%= loggedInUser.lastName %><br>
+                        <div>
+                            <a href="/">Home</a>
+                            <a href="/signup">Sign Up</a>
+                            <a href="/login">Sign In</a>
                         </div>
-                        <div class="flex-auto">
-                            <input type="date" name="dueDate"
-                                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4" />
+                        <a href="/signout">Signout</a>
+                        <form action="/todos" method="post">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                            <div class="flex gap-2 py-4">
+                                <div class="flex-auto">
+                                    <input type="text" name="title" placeholder="What's next?"
+                                        class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" />
+                                </div>
+                                <div class="flex-auto">
+                                    <input type="date" name="dueDate"
+                                        class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4" />
+                                </div>
+                                <div class="flex-none">
+                                    <button type="submit"
+                                        class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div>
+                            <% if(messages && messages.error && messages.error.length> 0) { %>
+                                <% for(var i=0; i<messages.error.length; i++) { %>
+                                    <li>
+                                        <%= messages.error[i] %><br>
+                                    </li>
+                                    <% } %>
+                                        <% } %>
                         </div>
-                        <div class="flex-none">
-                            <button type="submit"
-                                class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">
-                                Add
-                            </button>
+                        <br>
+                        <div>
+                            <%- include('todo.ejs', {title: "Overdue" , "data" : overdue}) %>
+                                <%- include('todo.ejs', {title: "Due Today" , "data" : dueToday}) %>
+                                    <%- include('todo.ejs', {title: "Due Later" , "data" : dueLater}) %>
+                                        <%- include('todo.ejs', {title: "Completed Items" , "data" : completedList}) %>
                         </div>
-                    </div>
-                </form>
-                <div>
-                    <% if(messages && messages.error && messages.error.length> 0) { %>
-                        <% for(var i=0; i<messages.error.length; i++) { %>
-                            <li>
-                                <%= messages.error[i] %><br>
-                            </li>
-                            <% } %>
-                                <% } %>
-                </div>
-                <br>
-                <div>
-                    <%- include('todo.ejs', {title: "Overdue" , "data" : overdue}) %>
-                        <%- include('todo.ejs', {title: "Due Today" , "data" : dueToday}) %>
-                            <%- include('todo.ejs', {title: "Due Later" , "data" : dueLater}) %>
-                                <%- include('todo.ejs', {title: "Completed Items" , "data" : completedList}) %>
-                </div>
 
 
-                <%- include('footer') %>
+                        <%- include('footer') %>
         </div>
     </div>
 </body>

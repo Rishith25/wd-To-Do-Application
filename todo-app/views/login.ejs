@@ -17,6 +17,8 @@
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include('header') %>
+            <a href="/" class="text-green-600">Home Page</a>
+            <p class="py-2">Don't have an account? <a href="/signup" class="text-green-600">Sign-Up</a></p>
                 <h6 class="py-4">Login to your account</h6>
                 <form action="/session" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -35,6 +37,7 @@
                             class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-5 py-2">Sign in</button>
                     </div>
                 </form>
+
                 <% if(messages && messages.error && messages.error.length> 0) { %>
                     <% for(var i=0; i<messages.error.length; i++) { %>
                         <li>
