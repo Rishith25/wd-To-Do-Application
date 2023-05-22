@@ -319,7 +319,7 @@ app.post(
           if (message == "Validation len on title failed") {
             request.flash(
               "error",
-              "Item failed to create as Todo can not be empty"
+              "Item failed to create as Todo can not be less than 5 characters"
             );
           }
           if (message == "Validation isDate on dueDate failed") {

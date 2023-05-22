@@ -44,7 +44,7 @@ describe("List the todo items Todo test suite", () => {
       _csrf: csrfToken,
     });
     expect(res.statusCode).toBe(302);
-  }, 10000);
+  });
 
   test("Sign out", async () => {
     let res = await agent.get("/todos");
