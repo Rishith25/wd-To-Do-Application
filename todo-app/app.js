@@ -241,6 +241,15 @@ app.post("/users", async (request, response) => {
   }
 });
 
+app.get("/homepage", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
+});
+
 app.get("/login", async (request, response) => {
   if (request.isAuthenticated()) {
     return response.redirect("/todos");

@@ -99,7 +99,7 @@ describe("List the todo items Todo test suite", () => {
       .put(`/todos/${latestTodo.id}`)
       .send({
         _csrf: csrfToken,
-        completed: true,
+        completed: false,
       });
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(true);
@@ -140,7 +140,7 @@ describe("List the todo items Todo test suite", () => {
       .put(`/todos/${latestTodo.id}`)
       .send({
         _csrf: csrfToken,
-        completed: false,
+        completed: true,
       });
     const parsedUpdateResponse = JSON.parse(markInCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(false);
