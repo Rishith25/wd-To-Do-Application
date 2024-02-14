@@ -38,14 +38,14 @@ jobs:
       # Performs a clean installation of all dependencies in the `package.json` file
       # For more information, see https://docs.npmjs.com/cli/ci.html
       - name: Install dependencies
-        run: cd todo && npm ci
+        run: cd todo-app && npm ci
 
       - name: Run unit tests
-        run: cd todo && npm test
+        run: cd todo-app && npm test
       - name: Run the app
         id: run-app
         run: |
-          cd todo
+          cd todo-app
           npm install
           npx sequelize-cli db:drop
           npx sequelize-cli db:create
