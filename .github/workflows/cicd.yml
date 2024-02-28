@@ -5,6 +5,7 @@ env:
   PG_DATABASE: wd-todo-test
   PG_USER: ${{ secrets.PG_USER }}
   PG_PASSWORD: ${{secrets.PG_PASSWORD}}
+  SLACK_WEB_HOOK_URL: ${{secrets.SLACK_WEB_HOOK_URL}}
 
 jobs:
   # Label of the container job
@@ -69,6 +70,13 @@ jobs:
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
+      - name: Slack Notification
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status}}
+          steps: ${{toJson(steps)}}
+          channel: "#web-development"
+        if: always()
 
     # - name: Run integration tests
     #   run: |
