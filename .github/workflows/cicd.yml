@@ -70,7 +70,7 @@ jobs:
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-      - name: Slack Notification
+      - name: Slack Notify
         uses: act10ns/slack@v1
         with:
           status: ${{ job.status}}
