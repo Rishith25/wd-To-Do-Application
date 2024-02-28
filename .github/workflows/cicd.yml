@@ -58,7 +58,7 @@ jobs:
       - name: Success Notify
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Commit has been successful✅"}' ${{secrets.SLACK_WEBHOOK_URL}}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"✨Commit has been successful✅"}' ${{secrets.SLACK_WEBHOOK_URL}}
 
       - name: Faliure Notify
         if: failure()
