@@ -47,6 +47,21 @@ jobs:
       - name: Run unit tests
         run: cd todo-app && npm test
 
+      - name: Slack Notify
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status}}
+          steps: ${{toJson(steps)}}
+          channel: "#web-development"
+        if: success()
+
+      - name: Faliure Notify
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \ 
+          --data '{"text":"⚠️Error: The pipeline has failed❗"}' \  
+          ${{secrets.SLACK_WEBHOOK_URL}}
+
       - name: Run the app
         id: run-app
         run: |
@@ -70,13 +85,6 @@ jobs:
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-      - name: Slack Notify
-        uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status}}
-          steps: ${{toJson(steps)}}
-          channel: "#web-development"
-        if: always()
 
     # - name: Run integration tests
     #   run: |
