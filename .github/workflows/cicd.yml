@@ -5,7 +5,7 @@ env:
   PG_DATABASE: wd-todo-test
   PG_USER: ${{ secrets.PG_USER }}
   PG_PASSWORD: ${{secrets.PG_PASSWORD}}
-  SLACK_WEB_HOOK_URL: ${{secrets.SLACK_WEB_HOOK_URL}}
+  SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
 
 jobs:
   # Label of the container job
