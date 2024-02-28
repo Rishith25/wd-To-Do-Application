@@ -56,7 +56,7 @@ jobs:
         if: success()
 
       - name: Faliure Notify
-        if: failure()
+        if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' \ 
           --data '{"text":"⚠️Error: The pipeline has failed❗"}' \  
