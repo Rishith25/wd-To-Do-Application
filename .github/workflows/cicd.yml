@@ -58,9 +58,7 @@ jobs:
       - name: Faliure Notify
         if: always()
         run: |
-          curl -X POST -H 'Content-type: application/json' \ 
-          --data '{"text":"⚠️Error: The pipeline has failed❗"}' \  
-          ${{secrets.SLACK_WEBHOOK_URL}}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"⚠️Error: The pipeline has failed❗"}' ${{secrets.SLACK_WEBHOOK_URL}}
 
       - name: Run the app
         id: run-app
