@@ -108,7 +108,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/wd-to-do-application
+        run: docker build . --file todo-app/Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/wd-to-do-application
 
       - name: Docker Push
         run: docker push ${{ secrets.DOCKER_USERNAME }}/wd-to-do-application
